@@ -47,6 +47,5 @@ public class Chars {
     }
 
     return password;
-
 }
 }
