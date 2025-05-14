@@ -1,2 +1,2 @@
-# Game
-Game made By Capgemini IT onsite employees
+# PassGen
+Password Generator
