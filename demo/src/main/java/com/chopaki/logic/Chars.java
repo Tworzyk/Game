@@ -45,7 +45,7 @@ public class Chars {
             Character character = completeList.get(generator.nextInt(completeList.size()));
             password += character.toString();
     }
-
     return password;
 }
+
 }
