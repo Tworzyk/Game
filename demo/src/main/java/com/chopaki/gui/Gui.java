@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -94,23 +95,23 @@ public class Gui
         gbs.fill = GridBagConstraints.HORIZONTAL;
 
         gbs.insets = new Insets(10,10,5,5);
-        gbs.gridx = 1;
+        gbs.gridx = 0;
         gbs.gridy = 0;
         words.add(new JLabel("Words Password"), gbs);
 
-        gbs.gridx = 1;
+        gbs.gridx = 0;
         gbs.gridy = 1;
         words.add(new JLabel("Number of Words"), gbs);
 
         SpinnerNumberModel charcounter = new SpinnerNumberModel(1, 1, 64, 1);
         JSpinner spinnerwords = new JSpinner(charcounter);
-        gbs.gridx = 2;
+        gbs.gridx = 1;
         gbs.gridy = 1;
         words.add(spinnerwords, gbs);
-        gbs.gridx = 1;
+        gbs.gridx = 0;
         gbs.gridy = 3;
         words.add(new JLabel("Random Sign"),gbs);
-        gbs.gridx = 2;
+        gbs.gridx = 1;
         gbs.gridy = 3;
         JCheckBox randomSign = new JCheckBox("Enable");
         words.add(randomSign,gbs);
@@ -129,15 +130,106 @@ public class Gui
                 outputWords.setText(passwordW);
             }
         });
-        gbs.gridx = 1;
-        gbs.gridy = 4;
+        gbs.gridx = 2;
+        gbs.gridy = 3;
+        
         words.add(wordsButton,gbs);
-        gbs.gridx = 1;
-        gbs.gridy = 5;
+        gbs.gridx = 0;
         gbs.gridwidth = 3;
+        gbs.gridy = 5;
+       
         words.add(outputWords,gbs);
+
+        JPanel userpasswword = new JPanel();
+        userpasswword.setLayout(new GridBagLayout());
+        GridBagConstraints gbu = new GridBagConstraints();
+        gbu.fill = GridBagConstraints.HORIZONTAL;
+        gbu.insets = new Insets(10,10,5,5);
+        gbu.gridx = 0;
+        gbu.gridy = 0;
+        userpasswword.add(new JLabel("User Password"), gbu);
+        gbu.gridx = 2;
+        gbu.gridy = 0;
+        JLabel charscounter = new JLabel("Number of Characters");
+        userpasswword.add(charscounter, gbu);
+        gbu.gridx = 1;
+        gbu.gridy = 0;
+        JLabel ProvidePassword = new JLabel("Provide Password");
+        userpasswword.add(ProvidePassword, gbu);
+        gbu.gridx = 1;
+        gbu.gridy = 1;
+        JPasswordField passwordField = new JPasswordField(10);
+        userpasswword.add(passwordField, gbu);
+        gbu.gridx = 0;
+        gbu.gridy = 1;
+        JCheckBox showPassword = new JCheckBox("Show Password");
+        userpasswword.add(showPassword, gbu);
+        JCheckBox RandomWods = new JCheckBox("Enable Random Words");
+        gbu.gridx = 0;
+        gbu.gridy = 2;
+        userpasswword.add(RandomWods, gbu);
+        JCheckBox charsNumsUser = new JCheckBox("Enable numbers");
+        JCheckBox charsSpecialUser = new JCheckBox("Enable special");
+        gbu.gridx = 1;
+        gbu.gridy = 2;
+        userpasswword.add(charsNumsUser, gbu);
+        gbu.gridx = 2;
+        gbu.gridy = 2;
+        userpasswword.add(charsSpecialUser, gbu);
+        gbu.gridx = 2;
+        gbu.gridy = 3;
+        JButton userpassButton = new JButton("Submit");
+        userpasswword.add(userpassButton, gbu);
+        gbu.gridx = 0;
+        gbu.gridwidth = 2;
+        gbu.gridy = 3;
+        JPasswordField outputPasswordUser = new JPasswordField();
+        userpasswword.add(outputPasswordUser, gbu);
+        gbu.gridx = 2;
+        gbu.gridy = 1;
+
+        SpinnerNumberModel charcounteruser = new SpinnerNumberModel(1, 1, 64, 1);
+        JSpinner spinnercharsuser = new JSpinner(charcounteruser);
+        userpasswword.add(spinnercharsuser, gbu);
+
+        userpassButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String password = new String(passwordField.getPassword());
+                Boolean chars = charsNumsUser.isSelected();
+                Boolean special = charsSpecialUser.isSelected();
+                Boolean random = RandomWods.isSelected();
+                int howmanychars = (Integer)spinnercharsuser.getValue();
+                String passwordU = Words.genCharsUser(password, chars, special, random,howmanychars);
+                //outputPasswordUser.setLineWrap(true);
+                outputPasswordUser.setText(passwordU);
+            }
+        });
+
+        showPassword.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (showPassword.isSelected())
+                {
+                    passwordField.setEchoChar((char) 0);
+                    outputPasswordUser.setEchoChar((char) 0);
+                }
+                else
+                {
+                    passwordField.setEchoChar('*');
+                    outputPasswordUser.setEchoChar('*');
+                }
+            }
+        });
+        
+        
         tabPanel.addTab("Character Password",chars);
         tabPanel.addTab("Words Password",words);
+        tabPanel.addTab("UserPawssword",userpasswword);
         frame.add(tabPanel);
         frame.setVisible(true);
     }

@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Words
@@ -80,6 +82,38 @@ public class Words
         result += words.get(getRandomNumber());
         return result;
     }
+    public static String genCharsUser(String password, Boolean special, Boolean chars,Boolean wordsformmenu, int length){
+        Character[] digits = convertToCharacterArray(("1234567890".toCharArray()));
+        Character[] specials = convertToCharacterArray(("!@#$%^&*?+-".toCharArray()));
+        
+        Random generator = new Random();
+        List<Character> completeList = new ArrayList<>();
+         if(chars){
+            completeList.addAll(new ArrayList<>(Arrays.asList(digits)));
+        }
+        if(special){
+            completeList.addAll(new ArrayList<>(Arrays.asList(specials)));
+        }
+        if(wordsformmenu){
+             String randomWord = words.get(generator.nextInt(words.size()));
+             password += randomWord;
+            }
+        
+
+        if(completeList.isEmpty()){
+            return password;
+        }
+        for(int i = 0; i < length; i++){
+            Character character = completeList.get(generator.nextInt(completeList.size()));
+            password += character.toString();
+        }
+
+    
+    return password;
+
+    }
+
+
     private static int getRandomNumber()
     {
         if (words.isEmpty()) {
