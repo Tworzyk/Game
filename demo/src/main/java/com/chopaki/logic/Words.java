@@ -94,14 +94,16 @@ public class Words
         if(special){
             completeList.addAll(new ArrayList<>(Arrays.asList(specials)));
         }
+        Character specialCharget = getSpecial();
         if(wordsformmenu){
              String randomWord = words.get(generator.nextInt(words.size()));
-             password += randomWord;
+             password += specialCharget +randomWord;
             }
         
 
         if(completeList.isEmpty()){
             return password;
+            
         }
         for(int i = 0; i < length; i++){
             Character character = completeList.get(generator.nextInt(completeList.size()));
