@@ -20,6 +20,8 @@ import javax.swing.SpinnerNumberModel;
 
 import com.chopaki.logic.Chars;
 import com.chopaki.logic.Words;
+import com.chopaki.logic.load;
+import com.chopaki.logic.save;
 
 
 
@@ -28,11 +30,11 @@ public class Gui
     public Gui(){
         JFrame frame = new JFrame("Password Generator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
+        frame.setSize(600, 600);
 
-
-        JTabbedPane tabPanel = new JTabbedPane();
         
+        JTabbedPane tabPanel = new JTabbedPane();
+      
         // Char Section
         JPanel chars = new JPanel();
         chars.setLayout(new GridBagLayout());
@@ -81,12 +83,25 @@ public class Gui
         });
         chars.add(charsButton, gbc);
 
-
-
-        gbc.gridx = 1;
+        gbc.gridwidth = 0;
+        gbc.gridx = 0;
         gbc.gridy = 4;
         chars.add(outputChars, gbc);
-
+        JButton saveButtonchar = new JButton("Save");
+        gbc.gridwidth = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        chars.add(saveButtonchar, gbc);
+        saveButtonchar.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                
+                save.save(outputChars.getText());
+            }
+        });
+     
 
         //Word Section
         JPanel words = new JPanel();
@@ -95,7 +110,7 @@ public class Gui
         gbs.fill = GridBagConstraints.HORIZONTAL;
 
         gbs.insets = new Insets(10,10,5,5);
-        gbs.gridx = 0;
+        gbs.gridx = 1;
         gbs.gridy = 0;
         words.add(new JLabel("Words Password"), gbs);
 
@@ -137,9 +152,26 @@ public class Gui
         gbs.gridx = 0;
         gbs.gridwidth = 3;
         gbs.gridy = 5;
-       
+
         words.add(outputWords,gbs);
 
+        JButton saveButtonwords = new JButton("Save");
+        gbs.gridwidth = 0;
+        gbs.gridx = 0;
+        gbs.gridy = 6;
+        words.add(saveButtonwords, gbs);
+        saveButtonwords.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                
+                save.save(outputWords.getText());
+            }
+        });
+
+
+        //user password section
         JPanel userpasswword = new JPanel();
         userpasswword.setLayout(new GridBagLayout());
         GridBagConstraints gbu = new GridBagConstraints();
@@ -191,6 +223,20 @@ public class Gui
         SpinnerNumberModel charcounteruser = new SpinnerNumberModel(1, 1, 64, 1);
         JSpinner spinnercharsuser = new JSpinner(charcounteruser);
         userpasswword.add(spinnercharsuser, gbu);
+        JButton saveButtonuser = new JButton("Save");
+        gbu.gridwidth = 0;
+        gbu.gridx = 0;
+        gbu.gridy = 4;
+        userpasswword.add(saveButtonuser, gbu);
+        saveButtonuser.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String passwordu = new String(passwordField.getPassword());
+                save.save(outputPasswordUser.getText());
+            }
+        });
 
         userpassButton.addActionListener(new ActionListener()
         {
@@ -203,7 +249,6 @@ public class Gui
                 Boolean random = RandomWods.isSelected();
                 int howmanychars = (Integer)spinnercharsuser.getValue();
                 String passwordU = Words.genCharsUser(password, chars, special, random,howmanychars);
-                //outputPasswordUser.setLineWrap(true);
                 outputPasswordUser.setText(passwordU);
             }
         });
@@ -225,11 +270,65 @@ public class Gui
                 }
             }
         });
+        //Load password page 
+
+        JPanel loadpassword = new JPanel();
+        loadpassword.setLayout(new GridBagLayout());
+        GridBagConstraints gbl = new GridBagConstraints();
+        gbl.fill = GridBagConstraints.HORIZONTAL;
+        gbl.insets = new Insets(10,10,5,5);
+        gbl.gridx = 0;
+        gbl.gridy = 0;
+        loadpassword.add(new JLabel("Load Password"), gbl);
+        gbl.gridx = 1;
+        gbl.gridy = 0;
+        JButton loadButton = new JButton("Load");
+        loadpassword.add(loadButton, gbl);
+        JButton clearboard = new JButton("Clear");
+        gbl.gridx = 1;
+        gbl.gridy = 1;
+        loadpassword.add(clearboard, gbl);
+        JTextArea loadText = new JTextArea();
+        gbl.gridx = 0;
+        gbl.gridy = 1;
+        loadText.setLineWrap(true);
+        loadText.setWrapStyleWord(true);
+        loadText.setEditable(false);
+        loadText.setRows(10);
+        loadText.setColumns(30);
+        loadText.setText("Load Passwords from file");
+        loadpassword.add(loadText, gbl);
         
+        clearboard.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                loadText.setText("");
+                load.clearlist();
+            }
+        });
+        loadButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                load.load();
+                StringBuilder sb = new StringBuilder();
+                for (String password : load.getPasswords())
+                {
+                    sb.append(password).append("\n");
+                }
+                loadText.setText(sb.toString());
+            }
+        });
+
+
         
         tabPanel.addTab("Character Password",chars);
         tabPanel.addTab("Words Password",words);
         tabPanel.addTab("UserPawssword",userpasswword);
+        tabPanel.addTab("Load Password",loadpassword);
         frame.add(tabPanel);
         frame.setVisible(true);
     }
